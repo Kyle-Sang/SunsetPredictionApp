@@ -7,12 +7,12 @@ import java.net.URL
 import java.util.Scanner
 
 class WebApiThread : Thread {
-    lateinit var activity : Activity
+    lateinit var activity : LocalInfoActivity
     var result : String = "NOT SET YET"
     private var lat : Double = 0.0
     private var lon : Double = 0.0
 
-    constructor( lat : Double, lon : Double) {
+    constructor(activity: LocalInfoActivity, lat : Double, lon : Double) {
         this.lat = lat
         this.lon = lon
     }
@@ -28,17 +28,17 @@ class WebApiThread : Thread {
         }
         Log.w( "MainActivity", "result is $result" )
 
-//         update GUI
-//            var updateGui : UpdateGui = UpdateGui( )
-//            activity.runOnUiThread( updateGui )
+        //update GUI
+        var updateGui : UpdateGui = UpdateGui( )
+        activity.runOnUiThread( updateGui )
     }
 
-//        inner class UpdateGui : Runnable {
-//            override fun run() {
-//                Log.w( "MainActivity", "Inside UpdateGui:run" )
-//                activity.updateView( result )
-//            }
-//        }
+    inner class UpdateGui : Runnable {
+        override fun run() {
+            Log.w( "MainActivity", "Inside UpdateGui:run" )
+            activity.updateGui( result )
+        }
+    }
 
     companion object {
         const val apiKey : String = "0ba2ea1e33c83fe7e654c394952a1fe7"
