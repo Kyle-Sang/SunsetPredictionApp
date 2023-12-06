@@ -61,6 +61,8 @@ class LocalInfoActivity : AppCompatActivity() {
             Log.w("LocalInfoActivity","humidity: $humidity")
             Log.w("LocalInfoActivity","sunset: $sunset")
 
+            
+
         } catch ( je : JSONException) {
             Log.w( "RatingActivity", "Json exception is " + je.message )
         }

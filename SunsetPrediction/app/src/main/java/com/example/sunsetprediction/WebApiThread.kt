@@ -13,30 +13,31 @@ class WebApiThread : Thread {
     private var lon : Double = 0.0
 
     constructor(activity: LocalInfoActivity, lat : Double, lon : Double) {
+        this.activity = activity
         this.lat = lat
         this.lon = lon
     }
 
     override fun run( ) {
-        val url : URL = URL( "${apiUrl}lat=${lat}&lon=${lon}&appid=${apiKey}" )
+        val url : URL = URL("${apiUrl}lat=${lat}&lon=${lon}&appid=${apiKey}" )
         val iStream : InputStream = url.openStream()
         // read from iStream
-        val scan : Scanner = Scanner( iStream )
+        val scan : Scanner = Scanner(iStream)
         result = ""
-        while( scan.hasNext( ) ) {
+        while(scan.hasNext()) {
             result += scan.nextLine( )
         }
-        Log.w( "MainActivity", "result is $result" )
+        Log.w("MainActivity", "result is $result")
 
         //update GUI
-        var updateGui : UpdateGui = UpdateGui( )
-        activity.runOnUiThread( updateGui )
+        var updateGui : UpdateGui = UpdateGui()
+        activity.runOnUiThread(updateGui)
     }
 
     inner class UpdateGui : Runnable {
         override fun run() {
             Log.w( "MainActivity", "Inside UpdateGui:run" )
-            activity.updateGui( result )
+            activity.updateGui(result)
         }
     }
 
