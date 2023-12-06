@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.View
 import android.widget.AnalogClock
 import android.widget.RatingBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONException
 import org.json.JSONObject
 import java.time.Instant
 import java.util.Date
+import java.util.Locale
 
 class LocalInfoActivity : AppCompatActivity() {
     private lateinit var clock : AnalogClock
@@ -61,7 +63,11 @@ class LocalInfoActivity : AppCompatActivity() {
             Log.w("LocalInfoActivity","humidity: $humidity")
             Log.w("LocalInfoActivity","sunset: $sunset")
 
-            
+            findViewById<TextView>(R.id.location).text = location
+            findViewById<TextView>(R.id.description).text = weather.capitalize()
+            findViewById<TextView>(R.id.temperature).text = temp.toString()
+            findViewById<TextView>(R.id.sunset_time).text = sunset.toString()
+
 
         } catch ( je : JSONException) {
             Log.w( "RatingActivity", "Json exception is " + je.message )
