@@ -18,18 +18,11 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RatingActivity"
-            >
-        </activity>
-        <activity
-            android:name=".LocalInfoActivity"
-            >
-        </activity>
+        <activity android:name=".RatingActivity"></activity>
+        <activity android:name=".LocalInfoActivity"> </activity>
     </application>
 
 </manifest>
