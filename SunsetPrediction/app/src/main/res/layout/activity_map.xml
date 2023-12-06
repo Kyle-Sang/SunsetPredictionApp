@@ -13,6 +13,7 @@
 <!--        android:text="bruh"-->
 <!--        android:layout_weight="1"-->
 <!--        android:textAlignment="center"/>-->
+
     <Button
         android:id="@+id/button"
         android:layout_weight="1"
