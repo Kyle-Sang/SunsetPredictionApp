@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:id="@+id/map"
     tools:context=".MapActivity">
 
 <!--    <TextView-->
@@ -16,10 +17,11 @@
 
     <Button
         android:id="@+id/button"
+        android:layout_alignParentBottom="true"
         android:layout_weight="1"
         android:layout_height="20dp"
         android:layout_width="match_parent"
         android:text="to local info"
         android:onClick="nextScreen" />
 
-</LinearLayout>
+</RelativeLayout>
