@@ -16,6 +16,7 @@ class RatingActivity : AppCompatActivity() {
     private var num_user_ratings : Int = 0
     private var rating : Float = 0f
     private lateinit var editor : SharedPreferences.Editor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rating)
