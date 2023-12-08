@@ -21,32 +21,33 @@ class LocalInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_local_info)
 
+        // get gps data
+        // ask permission for this
+
+        // update these with GPS returned values
+        var data : WeatherData = WeatherData(0f, 0f)
+
         clock = findViewById(R.id.clock)
         pred_rating = findViewById(R.id.rating)
-        pred_rating.rating = getRating()
+        pred_rating.rating = MapActivity.sunset_pred.getPredictedRating(data)
 
-        Log.w("RatingActivity", "here!!!")
-        var task : WebApiThread = WebApiThread( this,38.982, -76.943)
+        // replace these with GPS returned values
+        var task = WebApiThread( this,38.982, -76.943)
         task.start()
     }
 
     fun nextScreen(v : View) {
-        var intent: Intent = Intent(this, RatingActivity::class.java)
-        startActivity(intent) // go to Travel Activity
-        Log.w("MapActivity", "to rating")
+        var intent = Intent(this, RatingActivity::class.java)
+        startActivity(intent) // go to RatingActivity
     }
 
     fun returnToMap(v : View) {
         finish()
     }
-
-    private fun getRating(): Float {
-        return (0..5).random().toFloat()
-    }
     
     fun updateGui(s : String) {
         try {
-            var info : JSONObject = JSONObject(s)
+            var info = JSONObject(s)
             var location : String = info.getString("name")
 
             var weather : String = info.getJSONArray( "weather" ).getJSONObject(0).getString("description")
