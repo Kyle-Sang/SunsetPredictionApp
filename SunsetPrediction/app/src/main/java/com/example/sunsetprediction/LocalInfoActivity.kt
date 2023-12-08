@@ -1,13 +1,24 @@
 package com.example.sunsetprediction
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AnalogClock
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import org.json.JSONException
 import org.json.JSONObject
 import java.time.Instant
@@ -26,8 +37,73 @@ class LocalInfoActivity : AppCompatActivity() {
         pred_rating.rating = getRating()
 
         Log.w("RatingActivity", "here!!!")
-        var task : WebApiThread = WebApiThread( this,38.982, -76.943)
-        task.start()
+
+//        var coarseLocPerm : Int =
+//            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+//        var fineLocPerm : Int =
+//            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//        if( coarseLocPerm == PackageManager.PERMISSION_GRANTED && fineLocPerm == PackageManager.PERMISSION_GRANTED) {
+//            Log.w( "LocalInfoActivity", "GPS permissions already granted" )
+//            // start using the camera
+//        } else {
+//            Log.w( "LocalInfoActivity", "Need to ask GPS permission" )
+//            var contract : ActivityResultContracts.RequestPermission = ActivityResultContracts.RequestPermission()
+//            var callback : Results = Results()
+//            var launcher : ActivityResultLauncher<String> = registerForActivityResult(contract) { result ->
+//                if (result) {
+//                    Log.w("LocalInfoActivity", "Permission granted by user")
+//                    // start using the camera
+//                } else {
+//                    Log.w("LocalInfoActivity", "Permission denied by user")
+//                }
+//            }
+//            launcher.launch( Manifest.permission.ACCESS_FINE_LOCATION )
+//        }
+
+        var provider : FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        Log.w("LocalInfoActivity", "permissions")
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+                1
+            )
+        }
+        var locTask: Task<Location> = provider.lastLocation
+        locTask.addOnSuccessListener {loc ->
+            Log.w("LocalInfoActivity", "location retrieved")
+            if (loc != null) {
+                Log.w("LocalInfoActivity", "not null")
+                var task: WebApiThread = WebApiThread(this, loc.latitude, loc.longitude)
+                task.start()
+            } else {
+                Log.w("LocalInfoActivity", "location null")
+            }
+        }
+
+    }
+
+    fun accessGPS() {
+
+    }
+
+    inner class Results : ActivityResultCallback<Boolean> {
+        override fun onActivityResult(result: Boolean) {
+            if( result ) {
+                Log.w( "bruh", "Permission granted by user" )
+                // start using the camera
+
+            } else {
+                Log.w( "bruh", "Permission denied by user" )
+            }
+        }
     }
 
     fun nextScreen(v : View) {
