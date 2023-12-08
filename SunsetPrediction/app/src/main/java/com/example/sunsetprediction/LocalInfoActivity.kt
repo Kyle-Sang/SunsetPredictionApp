@@ -1,9 +1,6 @@
 package com.example.sunsetprediction
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,19 +8,15 @@ import android.widget.AnalogClock
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.Task
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.DecimalFormat
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
-import java.util.Locale
+
 
 class LocalInfoActivity : AppCompatActivity() {
     private lateinit var clock : AnalogClock
@@ -60,33 +53,36 @@ class LocalInfoActivity : AppCompatActivity() {
 //            launcher.launch( Manifest.permission.ACCESS_FINE_LOCATION )
 //        }
 
-        var provider : FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        Log.w("LocalInfoActivity", "permissions")
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-                1
-            )
-        }
-        var locTask: Task<Location> = provider.lastLocation
-        locTask.addOnSuccessListener {loc ->
-            Log.w("LocalInfoActivity", "location retrieved")
-            if (loc != null) {
-                Log.w("LocalInfoActivity", "not null")
-                var task: WebApiThread = WebApiThread(this, loc.latitude, loc.longitude)
-                task.start()
-            } else {
-                Log.w("LocalInfoActivity", "location null")
-            }
-        }
+//        var provider : FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+//        Log.w("LocalInfoActivity", "permissions")
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+//                1
+//            )
+//        }
+//        var locTask: Task<Location> = provider.lastLocation
+//        locTask.addOnSuccessListener {loc ->
+//            Log.w("LocalInfoActivity", "location retrieved")
+//            if (loc != null) {
+//                Log.w("LocalInfoActivity", "not null")
+//                var task: WebApiThread = WebApiThread(this, loc.latitude, loc.longitude)
+//                task.start()
+//            } else {
+//                Log.w("LocalInfoActivity", "location null")
+//            }
+//        }
+
+        var task: WebApiThread = WebApiThread(this, 38.98, -76.93)
+        task.start()
 
     }
 
@@ -122,16 +118,17 @@ class LocalInfoActivity : AppCompatActivity() {
     
     fun updateGui(s : String) {
         try {
+            // Get values out of JSON response
             var info : JSONObject = JSONObject(s)
             var location : String = info.getString("name")
-
             var weather : String = info.getJSONArray( "weather" ).getJSONObject(0).getString("description")
             var mainInfo : JSONObject = info.getJSONObject("main")
             var temp : Double = (mainInfo.getDouble("temp") - 273.15) * 9 / 5 + 32
             var pressure : Int = mainInfo.getInt("pressure")
             var humidity : Int = mainInfo.getInt("humidity")
-            var sunset : Date = Date.from(Instant.ofEpochSecond(info.getJSONObject("sys").getLong("sunset")))
+            var sunset : Instant = Instant.ofEpochSecond(info.getJSONObject("sys").getLong("sunset"))
 
+            // Log retrieved values
             Log.w("LocalInfoActivity","location: $location")
             Log.w("LocalInfoActivity","weather: $weather")
             Log.w("LocalInfoActivity","temp: $temp")
@@ -139,12 +136,15 @@ class LocalInfoActivity : AppCompatActivity() {
             Log.w("LocalInfoActivity","humidity: $humidity")
             Log.w("LocalInfoActivity","sunset: $sunset")
 
+            // Format sunset time
+            val formatter = DateTimeFormatter.ofPattern("h:ma").withZone(ZoneId.systemDefault())
+            val sunsetFormatted  = formatter.format(sunset)
+
+            // Set text view values
             findViewById<TextView>(R.id.location).text = location
             findViewById<TextView>(R.id.description).text = weather.capitalize()
-            findViewById<TextView>(R.id.temperature).text = temp.toString()
-            findViewById<TextView>(R.id.sunset_time).text = sunset.toString()
-
-
+            findViewById<TextView>(R.id.temperature).text = "${DecimalFormat("#").format(temp)}\u2109"
+            findViewById<TextView>(R.id.sunset_time).text = "Sun sets at ${sunsetFormatted}"
         } catch ( je : JSONException) {
             Log.w( "RatingActivity", "Json exception is " + je.message )
         }
