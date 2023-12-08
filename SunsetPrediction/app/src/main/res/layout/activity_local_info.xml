@@ -2,47 +2,76 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    android:background="#FFF4D3">
 
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="curr location" />
+        android:text="curr location"
+        android:textSize="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"/>
+
+
+    <RelativeLayout
+        android:id="@+id/infoPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/location"
+        android:layout_marginTop="10dp"
+        android:background="#FEE8BF"
+        >
 
     <TextView
         android:id="@+id/temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="temperature"
-        android:layout_below="@id/location"/>
+        android:textSize="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        />
 
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="weather main"
-        android:layout_below="@id/temperature"/>
+        android:textSize="18dp"
+        android:layout_below="@id/temperature"
+        android:layout_centerHorizontal="true"
+        />
 
     <TextView
         android:id="@+id/sunset_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sun sets at sys sunset"
-        android:layout_below="@id/description" />
+        android:textSize="18dp"
+        android:layout_below="@id/description"
+        android:layout_centerHorizontal="true"
+        />
 
     <TextView
         android:id="@+id/prediction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Our prediction tonight"
-        android:layout_below="@id/sunset_time" />
+        android:textSize="18dp"
+        android:layout_below="@id/sunset_time"
+        android:layout_centerHorizontal="true"
+        />
 
     <RatingBar
         android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/prediction"/>
+        android:layout_below="@id/prediction"
+        android:layout_centerHorizontal="true"
+        />
 
     <Button
         android:id="@+id/rate_button"
@@ -50,19 +79,31 @@
         android:layout_height="wrap_content"
         android:text="Rate"
         android:layout_below="@id/rating"
-        android:onClick="nextScreen"/>
+        android:onClick="nextScreen"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        />
 
+    </RelativeLayout>
+
+    <!--Width and height changed from wrapcontent-->
     <AnalogClock
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:id="@+id/clock"
-        android:layout_below="@id/rate_button"/>
+        android:layout_below="@id/infoPanel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="30dp"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Return"
         android:layout_below="@id/clock"
-        android:onClick="returnToMap"/>
+        android:onClick="returnToMap"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"/>
 
 </RelativeLayout>
