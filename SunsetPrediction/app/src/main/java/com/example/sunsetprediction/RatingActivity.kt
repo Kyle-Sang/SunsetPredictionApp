@@ -20,6 +20,8 @@ class RatingActivity : AppCompatActivity() {
 
         rt = findViewById(R.id.ratingBar)
         ratings_count = findViewById(R.id.ratings_count)
+
+        MapActivity.sunset_pred.initiatePreferences(this, ratings_count)
     }
 
     fun getRating(rt : RatingBar) : Float {
