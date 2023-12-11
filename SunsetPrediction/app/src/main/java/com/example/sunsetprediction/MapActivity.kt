@@ -8,15 +8,17 @@ import android.view.View
 import android.widget.Button
 
 class MapActivity : AppCompatActivity() {
-    private lateinit var toLocal : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
     }
 
     fun nextScreen (v : View) {
-        var intent: Intent = Intent(this, LocalInfoActivity::class.java)
-        startActivity(intent) // go to Travel Activity
-        Log.w("MapActivity", "to local info")
+        var intent = Intent(this, LocalInfoActivity::class.java)
+        startActivity(intent) // go to LocalInfoActivity
+    }
+
+    companion object {
+        var sunset_pred : SunsetPredictor = SunsetPredictor()
     }
 }

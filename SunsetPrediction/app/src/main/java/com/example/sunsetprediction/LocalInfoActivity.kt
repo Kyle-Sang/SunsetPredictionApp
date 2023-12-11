@@ -46,10 +46,11 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
         var adRequest : AdRequest = (AdRequest.Builder( )).build( )
         var adLoad : AdLoad = AdLoad( )
         InterstitialAd.load( this, adUnitId, adRequest, adLoad )
+        var data : WeatherData = WeatherData(0f, 0f)
 
         clock = findViewById(R.id.clock)
         pred_rating = findViewById(R.id.rating)
-        pred_rating.rating = getRating()
+        pred_rating.rating = MapActivity.sunset_pred.getPredictedRating(data)
 
         Log.w("RatingActivity", "here!!!")
 
@@ -69,17 +70,12 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
     }
 
     fun nextScreen(v : View) {
-        var intent: Intent = Intent(this, RatingActivity::class.java)
-        startActivity(intent) // go to Travel Activity
-        Log.w("MapActivity", "to rating")
+        var intent = Intent(this, RatingActivity::class.java)
+        startActivity(intent) // go to RatingActivity
     }
 
     fun returnToMap(v : View) {
         finish()
-    }
-
-    private fun getRating(): Float {
-        return (0..5).random().toFloat()
     }
     
     fun updateGui(s : String) {
