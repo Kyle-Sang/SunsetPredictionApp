@@ -9,18 +9,27 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.app.AppCompatActivity
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
-class LocalInfoActivity : AppCompatActivity() {
+class LocalInfoActivity : AppCompatActivity(), LocationListener {
     private lateinit var clock : AnalogClock
     private lateinit var pred_rating : RatingBar
+    private lateinit var locationManager: LocationManager
+    private val locationPermissionCode = 2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_local_info)
@@ -31,63 +40,7 @@ class LocalInfoActivity : AppCompatActivity() {
 
         Log.w("RatingActivity", "here!!!")
 
-//        var coarseLocPerm : Int =
-//            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-//        var fineLocPerm : Int =
-//            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-//        if( coarseLocPerm == PackageManager.PERMISSION_GRANTED && fineLocPerm == PackageManager.PERMISSION_GRANTED) {
-//            Log.w( "LocalInfoActivity", "GPS permissions already granted" )
-//            // start using the camera
-//        } else {
-//            Log.w( "LocalInfoActivity", "Need to ask GPS permission" )
-//            var contract : ActivityResultContracts.RequestPermission = ActivityResultContracts.RequestPermission()
-//            var callback : Results = Results()
-//            var launcher : ActivityResultLauncher<String> = registerForActivityResult(contract) { result ->
-//                if (result) {
-//                    Log.w("LocalInfoActivity", "Permission granted by user")
-//                    // start using the camera
-//                } else {
-//                    Log.w("LocalInfoActivity", "Permission denied by user")
-//                }
-//            }
-//            launcher.launch( Manifest.permission.ACCESS_FINE_LOCATION )
-//        }
-
-//        var provider : FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-//        Log.w("LocalInfoActivity", "permissions")
-//        if (ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(
-//                this,
-//                arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-//                1
-//            )
-//        }
-//        var locTask: Task<Location> = provider.lastLocation
-//        locTask.addOnSuccessListener {loc ->
-//            Log.w("LocalInfoActivity", "location retrieved")
-//            if (loc != null) {
-//                Log.w("LocalInfoActivity", "not null")
-//                var task: WebApiThread = WebApiThread(this, loc.latitude, loc.longitude)
-//                task.start()
-//            } else {
-//                Log.w("LocalInfoActivity", "location null")
-//            }
-//        }
-
-        var task: WebApiThread = WebApiThread(this, 38.98, -76.93)
-        task.start()
-
-    }
-
-    fun accessGPS() {
-
+        getLocation()
     }
 
     inner class Results : ActivityResultCallback<Boolean> {
@@ -147,6 +100,29 @@ class LocalInfoActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.sunset_time).text = "Sun sets at ${sunsetFormatted}"
         } catch ( je : JSONException) {
             Log.w( "RatingActivity", "Json exception is " + je.message )
+        }
+    }
+
+    private fun getLocation() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if ((ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+    }
+    override fun onLocationChanged(location: Location) {
+        var task: WebApiThread = WebApiThread(this, location.latitude, location.longitude)
+        task.start()
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == locationPermissionCode) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
