@@ -2,12 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:layout_margin="15dp">
+
+    <ImageView
+        android:id="@+id/sunset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sunset_logo"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/sunset"
         android:text="curr location" />
 
     <TextView
@@ -42,7 +50,7 @@
         android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/prediction"/>
+        android:layout_below="@id/prediction" />
 
     <Button
         android:id="@+id/rate_button"
@@ -56,7 +64,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/clock"
-        android:layout_below="@id/rate_button"/>
+        android:dial="@drawable/dial"
+        android:hand_hour="@drawable/hour_hand"
+        android:hand_minute="@drawable/min_hand"
+        android:layout_below="@id/rate_button"
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:layout_width="wrap_content"
