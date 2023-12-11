@@ -6,6 +6,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.slaviboy.graphics.RectD
 import com.slaviboy.voronoi.Delaunay
 import com.slaviboy.voronoi.Polygon
@@ -40,6 +43,7 @@ class VoronoiView : View {
     private var relaxationLoops = 0                // how many times to apply the llyod relaxation
     private var useDistantColor: Boolean = true    // use the gradient picker to generate different color depending how close the cells center is to the center of the canvas
     private val path: Path = Path()                // the path for the generated cells
+    private lateinit var database : DatabaseReference
     private val ratings : ArrayList<Double> = arrayListOf(
             2.988187028865887,
             2.940336654575491,
@@ -349,7 +353,7 @@ class VoronoiView : View {
             2.9885983041630038,
             4.471069378504241,
             0.5727506913678525,
-            3.6103128145555647,
+            3.6103128145555647
         )
 
     companion object {
@@ -372,7 +376,7 @@ class VoronoiView : View {
     }
 
     init {
-
+        database = Firebase.database.reference
         isInit = false
         halfDiagonalWidth = 0.0
         numberOfRandomPoints = 100
@@ -403,6 +407,9 @@ class VoronoiView : View {
             viewCenterX = width / 2.0
             viewCenterY = height / 2.0
             halfDiagonalWidth = Math.sqrt((width * width + height * height) / 4.0)
+
+
+
             initVoronoi()
         }
     }
@@ -419,7 +426,7 @@ class VoronoiView : View {
             points[i * 2 + 1] = (Math.random() * height - 1)
         }
 
-        val coordinates: DoubleArray = doubleArrayOf(
+        var coordinates1: DoubleArray = doubleArrayOf(
             397.6436951999999,304.31622226,
             774.7419445200001,328.11244451999994,
             549.6121770200001,386.69294274000003,
@@ -728,11 +735,22 @@ class VoronoiView : View {
             739.0681999999999,381.7847499999999,
             321.0001625,140.29721411000003,
             606.78421113,283.20821951999994,
-            261.69847260000006,344.83808339000007,
-
+            261.69847260000006,344.83808339000007
             )
+        database.child("Coordinates").get().addOnSuccessListener { it ->
+            Log.i("firebase", "Got value ${it.value}")
+            val values : List<Any>? = it.value as? List<Any>
+            Log.i("checker", "Got value ${values}")
+            if (values != null) {
+                coordinates1 = (values.mapNotNull{it as? Double }).toDoubleArray()
+                Log.i("checker2", "Got value ${coordinates1.size}")
+            }
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+        Log.i("checker2", "Got value ${coordinates1.size}")
         // generate delaunay and voronoi objects
-        delaunay = Delaunay(*coordinates)
+        delaunay = Delaunay(*coordinates1)
         voronoi = Voronoi(delaunay, RectD(0.0, 0.0, width.toDouble(), 600.0))
 
         // apply relaxation to the points
@@ -828,8 +846,8 @@ class VoronoiView : View {
     override fun onDraw(canvas: Canvas) {
         //drawLines(canvas)
         drawCellsWithPoints(canvas)
-        val mapRect : Rect = Rect(100, 50, 1050, 500)
-        map = BitmapFactory.decodeResource(resources, R.drawable.unitedstates)
+        val mapRect : Rect = Rect(0, 0, 1080, 600)
+        map = BitmapFactory.decodeResource(resources, R.drawable.masked_us)
         canvas.drawBitmap(map, null, mapRect, paint)
     }
 }

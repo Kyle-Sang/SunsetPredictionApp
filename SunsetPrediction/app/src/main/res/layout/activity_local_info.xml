@@ -9,11 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/clock"
+        android:layout_marginTop="40dp"
         android:dial="@drawable/dial"
-        android:hand_hour="@drawable/hour_hand"
-        android:hand_minute="@drawable/min_hand"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"/>
+        android:hand_hour="@drawable/hourhand"
+        android:hand_minute="@drawable/minutehand"
+        android:layout_centerHorizontal="true" />
+
 
     <TextView
         android:layout_marginTop="40dp"
@@ -51,7 +52,6 @@
         android:text="Our prediction tonight"
         android:textSize="18dp"
         android:layout_below="@id/sunset_time"
-        android:layout_centerHorizontal="true"
         />
 
     <RatingBar
@@ -65,7 +65,7 @@
 
     <Button
         android:id="@+id/rate_button"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Rate"
         android:layout_below="@id/rating"
@@ -73,7 +73,7 @@
         android:layout_marginTop="80dp"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Return"
         android:layout_below="@id/rating"

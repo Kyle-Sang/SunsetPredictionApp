@@ -36,8 +36,7 @@ class MapActivity : AppCompatActivity() {
         )
 
         var map : VoronoiView = VoronoiView(this)
-        var mapView : RelativeLayout = findViewById(R.id.map)
-        mapView.addView(map)
+
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if ((ContextCompat.checkSelfPermission(
                 this,
@@ -52,6 +51,8 @@ class MapActivity : AppCompatActivity() {
         } else {
             locationEnabled = true
         }
+        var mapView : RelativeLayout = findViewById(R.id.map)
+        mapView.addView(map)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

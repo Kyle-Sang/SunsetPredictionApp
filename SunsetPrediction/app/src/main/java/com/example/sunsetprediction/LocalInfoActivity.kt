@@ -37,6 +37,7 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
     private var ad : InterstitialAd? = null
+    private lateinit var data : WeatherData
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_local_info)
@@ -46,11 +47,10 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
         var adRequest : AdRequest = (AdRequest.Builder( )).build( )
         var adLoad : AdLoad = AdLoad( )
         InterstitialAd.load( this, adUnitId, adRequest, adLoad )
-        var data : WeatherData = WeatherData(0f, 0f)
+        data = WeatherData(0f, 0f)
 
         clock = findViewById(R.id.clock)
         pred_rating = findViewById(R.id.rating)
-        pred_rating.rating = MapActivity.sunset_pred.getPredictedRating(data)
 
         Log.w("RatingActivity", "here!!!")
 
@@ -84,6 +84,7 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
             var info : JSONObject = JSONObject(s)
             var location : String = info.getString("name")
             var weather : String = info.getJSONArray( "weather" ).getJSONObject(0).getString("description")
+            var clouds : Int = info.getJSONObject( "clouds" ).getInt("all")
             var mainInfo : JSONObject = info.getJSONObject("main")
             var temp : Double = (mainInfo.getDouble("temp") - 273.15) * 9 / 5 + 32
             var pressure : Int = mainInfo.getInt("pressure")
@@ -94,9 +95,14 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
             Log.w("LocalInfoActivity","location: $location")
             Log.w("LocalInfoActivity","weather: $weather")
             Log.w("LocalInfoActivity","temp: $temp")
+            Log.w("LocalInfoActivity","clouds: $clouds")
             Log.w("LocalInfoActivity","pressure: $pressure")
             Log.w("LocalInfoActivity","humidity: $humidity")
             Log.w("LocalInfoActivity","sunset: $sunset")
+
+            data.updateParams(humidity.toFloat(), temp.toFloat(), clouds.toFloat(), pressure.toFloat(), location)
+
+            pred_rating.rating = MapActivity.sunset_pred.getPredictedRating(data)
 
             // Format sunset time
             val formatter = DateTimeFormatter.ofPattern("h:ma").withZone(ZoneId.systemDefault())
