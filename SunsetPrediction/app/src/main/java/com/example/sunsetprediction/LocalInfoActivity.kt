@@ -133,17 +133,6 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
         var task: WebApiThread = WebApiThread(this, location.latitude, location.longitude)
         task.start()
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == locationPermissionCode) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
     inner class AdLoad : InterstitialAdLoadCallback( ) {
         override fun onAdFailedToLoad(p0: LoadAdError) {
