@@ -4,39 +4,43 @@
     android:layout_height="match_parent"
     android:layout_margin="15dp">
 
-    <ImageView
-        android:id="@+id/sunset"
+    <AnalogClock
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/sunset_logo"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/clock"
+        android:dial="@drawable/dial"
+        android:hand_hour="@drawable/hour_hand"
+        android:hand_minute="@drawable/min_hand"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"/>
 
     <TextView
+        android:layout_marginTop="40dp"
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sunset"
-        android:text="curr location" />
+        android:layout_below="@id/clock"
+        android:text="■■■" />
 
     <TextView
         android:id="@+id/temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="temperature"
+        android:text="■■■"
         android:layout_below="@id/location"/>
 
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="weather main"
+        android:text="■■■"
         android:layout_below="@id/temperature"/>
 
     <TextView
         android:id="@+id/sunset_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sun sets at sys sunset"
+        android:text="■■■"
         android:layout_below="@id/description" />
 
     <TextView
@@ -52,7 +56,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/prediction"
         android:isIndicator="true"
-        android:theme="@style/RatingBar"/>
+        android:theme="@style/RatingBar"
+        />
 
     <Button
         android:id="@+id/rate_button"
@@ -60,23 +65,16 @@
         android:layout_height="wrap_content"
         android:text="Rate"
         android:layout_below="@id/rating"
-        android:onClick="nextScreen"/>
-
-    <AnalogClock
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/clock"
-        android:dial="@drawable/dial"
-        android:hand_hour="@drawable/hour_hand"
-        android:hand_minute="@drawable/min_hand"
-        android:layout_below="@id/rate_button"
-        android:layout_centerHorizontal="true"/>
+        android:onClick="nextScreen"
+        android:layout_marginTop="80dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Return"
-        android:layout_below="@id/clock"
-        android:onClick="returnToMap"/>
+        android:layout_below="@id/rating"
+        android:onClick="returnToMap"
+        android:layout_marginTop="80dp"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
