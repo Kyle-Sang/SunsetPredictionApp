@@ -27,18 +27,330 @@ class VoronoiView : View {
         defStyleAttr
     )
 
+    private lateinit var map : Bitmap
     private var numberOfRandomPoints: Int          // number of points that will be generated
     private var viewCenterX: Double                // the center of the view once it is calculated
     private var viewCenterY: Double                // the center of the view once it is calculated
     private var halfDiagonalWidth: Double          // half of the diagonal width
     private lateinit var delaunay: Delaunay        // delaunay object for center points
-    lateinit var voronoi: Voronoi                  // voronoi object for cells
+    private lateinit var voronoi: Voronoi                  // voronoi object for cells
     private var paint: Paint                       // paint object for the drawing
     private var isInit: Boolean                    // if view size is initialized, right before drawing
     private var gradientPicker: GradientPicker     // gradient picker, that will set color for each cell
     private var relaxationLoops = 0                // how many times to apply the llyod relaxation
     private var useDistantColor: Boolean = true    // use the gradient picker to generate different color depending how close the cells center is to the center of the canvas
     private val path: Path = Path()                // the path for the generated cells
+    private val ratings : ArrayList<Double> = arrayListOf(
+            2.988187028865887,
+            2.940336654575491,
+            0.7646819702563407,
+            3.9918939102388133,
+            2.468914024309128,
+            1.513170947567655,
+            4.338920365446366,
+            3.564719314989229,
+            3.686815504901692,
+            3.851690720132837,
+            2.785761099501431,
+            3.3630040110576336,
+            3.032136625159173,
+            2.5226134541914087,
+            2.577676373409487,
+            1.3270538393962297,
+            3.8053561323729275,
+            2.8695446076496407,
+            1.5492717418334936,
+            2.96721476135771,
+            2.3769910525177016,
+            4.436651661629348,
+            3.5205902535269686,
+            0.9944606331559895,
+            3.8053561323729275,
+            0.9944606331559895,
+            2.4457687205853427,
+            3.572196831748651,
+            4.1670948657197355,
+            3.684260727090496,
+            3.526201928787822,
+            4.1670948657197355,
+            0.867420245623268,
+            0.0,
+            3.9548294687970182,
+            2.3762154842907375,
+            1.145318950805669,
+            3.5396791042281315,
+            2.678898125226911,
+            1.1517087188431376,
+            2.064335742887533,
+            2.50937484869311,
+            1.436473003236685,
+            0.31044573076597437,
+            3.5328348508179834,
+            2.3762154842907375,
+            3.169297492107062,
+            3.5205902535269686,
+            2.64995814961034,
+            4.027345098018165,
+            3.2352654858931618,
+            3.6369856781501078,
+            3.9796591454043337,
+            3.1843735213114774,
+            3.694583544177519,
+            3.7072782420970833,
+            3.3430028678352555,
+            3.1319425447577407,
+            0.9372078332045458,
+            2.0875865129947604,
+            2.666007442531816,
+            2.50937484869311,
+            2.912685054638164,
+            4.063462567598803,
+            3.130280876212189,
+            3.1000381084091577,
+            1.1026895382715616,
+            3.3369199654514055,
+            0.8259760427147423,
+            2.3115232351311867,
+            4.144528182132385,
+            2.0527811448774202,
+            1.6176086434627424,
+            3.0678400104659858,
+            3.9707132044098086,
+            0.9014857213863424,
+            3.5887649196233884,
+            4.2723901112699245,
+            0.9765339389559642,
+            3.0748772009223164,
+            4.0550968079753655,
+            0.44400982033869674,
+            2.1475357312799197,
+            3.1396981772007444,
+            3.2395599773736574,
+            2.3653896174680127,
+            1.7239204852960397,
+            2.9329459192103187,
+            4.046603558594558,
+            2.8658822584190675,
+            3.6493850701960326,
+            3.781804675115174,
+            3.729650269619245,
+            3.63028140437455,
+            2.6707270881041785,
+            0.6420971471153937,
+            3.535863513172861,
+            2.103672013273072,
+            4.063260470755696,
+            1.398564099936663,
+            2.8997775014739386,
+            0.7884894035615921,
+            1.6269880097710172,
+            4.4927216436338275,
+            1.5910737664372763,
+            4.890068352580411,
+            4.362685678633758,
+            3.0748772009223164,
+            3.079389783596667,
+            4.218789271695063,
+            3.3118064430971557,
+            1.841236307573484,
+            3.7554544888273265,
+            3.0890481956857623,
+            0.5492718481303211,
+            3.0286189434193678,
+            3.1000381084091577,
+            0.6975976438670424,
+            2.103672013273072,
+            1.7754747123302248,
+            2.6622947600925784,
+            3.87737688342698,
+            2.5537602848159713,
+            0.5068960864006125,
+            2.390165481306454,
+            1.2506689392219723,
+            3.0564807743984304,
+            2.8733424604218376,
+            1.2198778043561185,
+            2.6791413124373613,
+            4.081661381676989,
+            2.577676373409487,
+            1.1173102682682126,
+            2.7781244198518467,
+            3.1346050311510827,
+            0.512712117312155,
+            2.305526034564433,
+            1.8869365025803289,
+            0.26483455935208255,
+            2.0544141298884515,
+            0.7239071716184069,
+            2.3653896174680127,
+            4.223036892918223,
+            3.5589923741061567,
+            3.4876248170565165,
+            2.522206038382615,
+            2.7563842771419784,
+            1.8347870133126678,
+            2.926609004778946,
+            3.618604498577403,
+            0.5211268399117163,
+            3.4216623540272173,
+            2.9290135801903534,
+            3.688457259400985,
+            2.9423438687784005,
+            2.9281628028057796,
+            2.96721476135771,
+            0.1723252276864756,
+            0.9532408494243256,
+            0.5953515228110069,
+            2.6219008030565867,
+            2.927804785956191,
+            2.290726526591188,
+            3.5195879076622845,
+            1.0625204986788102,
+            1.3000478016832848,
+            2.707692524016572,
+            4.051979387769604,
+            2.435609368088215,
+            1.7239204852960397,
+            0.9827469885178698,
+            0.9014857213863424,
+            2.8658822584190675,
+            3.391951759629709,
+            2.727404224299699,
+            4.184290503489273,
+            1.6359583990358453,
+            2.497156493431361,
+            2.3407347991417806,
+            0.4891538171961374,
+            4.183407442595594,
+            2.4963349518265434,
+            4.085782443240019,
+            1.877037477657071,
+            2.018142596343591,
+            2.650526206499552,
+            3.9707132044098086,
+            1.4298541655361556,
+            1.3868604206261128,
+            4.793420619681804,
+            4.027345098018165,
+            2.875627202769224,
+            1.8137254928013928,
+            0.685523652984015,
+            3.2546651883789717,
+            3.327079636307531,
+            4.1670948657197355,
+            3.5589923741061567,
+            3.604573118053203,
+            3.947699476227698,
+            1.3344272517003108,
+            0.4864087016283664,
+            1.3640968221659924,
+            2.6262371156951145,
+            2.323195490442135,
+            2.1329320087756534,
+            2.566090716795117,
+            1.3787963446859586,
+            2.2933836815342796,
+            1.5910737664372763,
+            3.526201928787822,
+            2.9873018233506703,
+            0.21933313941248786,
+            1.4920071163600013,
+            0.8375465852489661,
+            3.288972290117844,
+            3.5743657520763623,
+            3.4356737706785196,
+            2.4926806329891034,
+            2.8893481384263193,
+            2.9549203737607717,
+            3.8964434117943876,
+            1.5832155077291878,
+            1.837440580737835,
+            3.1742655732957283,
+            2.43962386708177,
+            0.20786849509256777,
+            4.338920365446366,
+            3.1247804140070095,
+            4.060311065972754,
+            1.0477230502065957,
+            0.9726456010094373,
+            3.7533865504856516,
+            2.406958386971155,
+            3.167987400318157,
+            3.3525880181578365,
+            2.4906189395860387,
+            2.910505811891979,
+            1.3780905337519798,
+            3.8649758969286436,
+            2.4557238835205744,
+            3.9707132044098086,
+            2.631074152826244,
+            3.127784362349515,
+            2.875627202769224,
+            4.338920365446366,
+            3.0825890606639716,
+            4.0243700491256105,
+            1.2572840565335426,
+            3.0907417449750962,
+            3.6315951667257766,
+            1.5982538513865119,
+            2.0323968680277584,
+            3.3369199654514055,
+            4.74197096215158,
+            2.551140333762471,
+            2.875529052597105,
+            2.675140930991196,
+            2.8128957563755375,
+            3.0206730728730657,
+            2.5537602848159713,
+            4.626958060639895,
+            2.171788614727521,
+            3.175310022669393,
+            2.6159464866161395,
+            1.620728056734018,
+            1.3968149856416903,
+            2.685001655838829,
+            3.4356737706785196,
+            3.5662713151048804,
+            2.745304593426062,
+            0.7887208649032696,
+            2.988187028865887,
+            3.001504350071434,
+            4.0243700491256105,
+            2.4127227974858885,
+            3.3837673357502753,
+            4.061431035920514,
+            0.43811061215970865,
+            4.218789271695063,
+            3.7554544888273265,
+            1.273364374841518,
+            2.0943069306009803,
+            3.6049405728984443,
+            1.5429276814318096,
+            1.7496097710594878,
+            3.3369199654514055,
+            1.0145909934591841,
+            5.0,
+            0.6085432248342129,
+            4.235925781854355,
+            3.2395599773736574,
+            2.305526034564433,
+            3.381450231001608,
+            2.9968801411955375,
+            2.910961098643084,
+            4.436651661629348,
+            1.2791766853641016,
+            2.940774628646054,
+            4.97749417134634,
+            1.2194376026196216,
+            1.318525113449275,
+            2.232193979273288,
+            2.6787867793002023,
+            3.498292766655026,
+            2.9885983041630038,
+            4.471069378504241,
+            0.5727506913678525,
+            3.6103128145555647,
+        )
 
     companion object {
 
@@ -68,11 +380,11 @@ class VoronoiView : View {
         // create gradient picker that gets color on certain position
         gradientPicker = GradientPicker(
             arrayListOf(
-                Color.parseColor("#9F0342"),
-                Color.parseColor("#F06E4A"),
-                Color.parseColor("#FEF0A6"),
-                Color.parseColor("#438DB4"),
-                Color.parseColor("#5B53A4")
+                Color.parseColor("#495665"),
+                Color.parseColor("#6d648d"),
+                Color.parseColor("#b16697"),
+                Color.parseColor("#ed6b79"),
+                Color.parseColor("#ff8e42")
             ),
             arrayListOf(0.0f, 0.25f, 0.5f, 0.75f, 1.0f)
         )
@@ -99,7 +411,6 @@ class VoronoiView : View {
      * Initialize the voronoi and delaunay objects by setting up random input points
      */
     private fun initVoronoi() {
-
         // generate random points
         Log.w("VORONOI", width.toString())
         val points = DoubleArray(numberOfRandomPoints * 2)
@@ -422,7 +733,7 @@ class VoronoiView : View {
             )
         // generate delaunay and voronoi objects
         delaunay = Delaunay(*coordinates)
-        voronoi = Voronoi(delaunay, RectD(0.0, 0.0, width.toDouble(), height.toDouble()))
+        voronoi = Voronoi(delaunay, RectD(0.0, 0.0, width.toDouble(), 600.0))
 
         // apply relaxation to the points
         voronoi.relax(relaxationLoops)
@@ -450,11 +761,12 @@ class VoronoiView : View {
 
             var cellColor = Color.WHITE
             if (useDistantColor) {
-                val cellCenterX = delaunay.coordinates[i * 2]                                   // center x of the voronoi shape
-                val cellCenterY = delaunay.coordinates[i * 2 + 1]                               // center x of the voronoi shape
-                val distance = distance(viewCenterX, viewCenterY, cellCenterX, cellCenterY)     // distance from the center screen to the cell center
-                val distanceInRange = (distance / halfDiagonalWidth).toFloat()                  // fit the distance in range between [0, 1]
-                cellColor = gradientPicker.getColorFromGradient(distanceInRange)                // get the color corresponding to the distance
+                // val cellCenterX = delaunay.coordinates[i * 2]                                   // center x of the voronoi shape
+                // val cellCenterY = delaunay.coordinates[i * 2 + 1]                               // center x of the voronoi shape
+                // val distance = distance(viewCenterX, viewCenterY, cellCenterX, cellCenterY)     // distance from the center screen to the cell center
+                // val distanceInRange = (distance / halfDiagonalWidth).toFloat()                 // fit the distance in range between [0, 1]
+                val rating = ratings[i] / 5
+                cellColor = gradientPicker.getColorFromGradient(rating.toFloat())                // get the color corresponding to the distance
             }
 
             // fill the cell with the corresponding color
@@ -470,7 +782,7 @@ class VoronoiView : View {
                 style = Paint.Style.STROKE
                 strokeWidth = 2.0f
             }
-            canvas.drawPath(path, paint)
+            // canvas.drawPath(path, paint)
         }
 
         // draw input points
@@ -479,13 +791,13 @@ class VoronoiView : View {
             color = inputCircleColor
             style = Paint.Style.FILL
         }
-        voronoi.renderInputPoints(circleRadius, path)
+        // voronoi.renderInputPoints(circleRadius, path)
         canvas.drawPath(path, paint)
 
         // draw center points
         path.reset()
         paint.color = centerCircleColor
-        voronoi.renderCenters(circleRadius, path)
+        // voronoi.renderCenters(circleRadius, path)
         canvas.drawPath(path, paint)
     }
 
@@ -514,8 +826,10 @@ class VoronoiView : View {
     }
 
     override fun onDraw(canvas: Canvas) {
-
-        drawLines(canvas)
-        //drawCellsWithPoints(canvas)
+        //drawLines(canvas)
+        drawCellsWithPoints(canvas)
+        val mapRect : Rect = Rect(100, 50, 1050, 500)
+        map = BitmapFactory.decodeResource(resources, R.drawable.unitedstates)
+        canvas.drawBitmap(map, null, mapRect, paint)
     }
 }
