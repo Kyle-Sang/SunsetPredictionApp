@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">SunsetPrediction</string>
+    <string name="app_name">MySunset</string>
+    <string name="description">Welcome to MySunset.
+        This app predicts the quality of your sunset based on where you are.
+        The map above shows the general sunset forecast for the United States,
+        where brighter colors mean better sunsets. Submit your own ratings to help make our app better!</string>
 </resources>

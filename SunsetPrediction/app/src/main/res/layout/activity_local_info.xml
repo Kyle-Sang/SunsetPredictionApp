@@ -2,58 +2,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:background="#FFF4D3">
+    android:layout_margin="15dp"
+    android:id="@+id/map">
+
+    <AnalogClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/clock"
+        android:layout_marginTop="40dp"
+        android:dial="@drawable/dial"
+        android:hand_hour="@drawable/hourhand"
+        android:hand_minute="@drawable/minutehand"
+        android:layout_centerHorizontal="true" />
+
 
     <TextView
+        android:layout_marginTop="40dp"
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="curr location"
-        android:textSize="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"/>
-
-
-    <RelativeLayout
-        android:id="@+id/infoPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/location"
-        android:layout_marginTop="10dp"
-        android:background="#FEE8BF"
-        >
+        android:layout_below="@id/clock"
+        android:text="■■■" />
 
     <TextView
         android:id="@+id/temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="temperature"
-        android:textSize="18dp"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        />
+        android:text="■■■"
+        android:layout_below="@id/location"/>
 
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="weather main"
-        android:textSize="18dp"
-        android:layout_below="@id/temperature"
-        android:layout_centerHorizontal="true"
-        />
+        android:text="■■■"
+        android:layout_below="@id/temperature"/>
 
     <TextView
         android:id="@+id/sunset_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sun sets at sys sunset"
-        android:textSize="18dp"
-        android:layout_below="@id/description"
-        android:layout_centerHorizontal="true"
-        />
+        android:text="■■■"
+        android:layout_below="@id/description" />
 
     <TextView
         android:id="@+id/prediction"
@@ -62,7 +52,6 @@
         android:text="Our prediction tonight"
         android:textSize="18dp"
         android:layout_below="@id/sunset_time"
-        android:layout_centerHorizontal="true"
         />
 
     <RatingBar
@@ -70,40 +59,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/prediction"
-        android:layout_centerHorizontal="true"
+        android:isIndicator="true"
+        android:theme="@style/RatingBar"
         />
 
     <Button
         android:id="@+id/rate_button"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Rate"
         android:layout_below="@id/rating"
         android:onClick="nextScreen"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"
-        />
-
-    </RelativeLayout>
-
-    <!--Width and height changed from wrapcontent-->
-    <AnalogClock
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:id="@+id/clock"
-        android:layout_below="@id/infoPanel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="30dp"
-        />
+        android:layout_marginTop="80dp"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Return"
-        android:layout_below="@id/clock"
+        android:layout_below="@id/rating"
         android:onClick="returnToMap"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="80dp"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

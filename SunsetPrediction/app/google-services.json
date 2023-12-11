@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1726099473",
+    "firebase_url": "https://mysunset-5b34e-default-rtdb.firebaseio.com",
+    "project_id": "mysunset-5b34e",
+    "storage_bucket": "mysunset-5b34e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1726099473:android:738710a19ada947b7581b0",
+        "android_client_info": {
+          "package_name": "com.example.sunsetprediction"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCi-rEY3_PUu6Th4b5tsBe1AmiPEtZFlh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

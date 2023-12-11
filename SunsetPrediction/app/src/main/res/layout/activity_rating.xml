@@ -2,33 +2,59 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="15dp"
     android:gravity="center">
+
+
+    <ImageView
+        android:id="@+id/sunset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sunset"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rate this sunset" />
+        android:text="Rate this sunset"
+        android:layout_below="@id/sunset"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"/>
+
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/prompt"/>
-
-    <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ratingBar"
-        android:text="Submit rating"
-        android:onClick="saveRating"/>
+        android:layout_below="@id/prompt"
+        android:theme="@style/RatingBar"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/ratings_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Total ratings contributed: "
-        android:layout_below="@id/save" />
+        android:layout_below="@id/ratingBar"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:onClick="saveRating"
+        android:layout_below="@id/ratings_count"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="80dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return"
+        android:onClick="goBack"
+        android:layout_below="@id/ratings_count"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="80dp"/>
 
 </RelativeLayout>
