@@ -1,22 +1,28 @@
 package com.example.sunsetprediction
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AnalogClock
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.appcompat.app.AppCompatActivity
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.content.Context
-import android.content.pm.PackageManager
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -30,9 +36,16 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
     private lateinit var pred_rating : RatingBar
     private lateinit var locationManager: LocationManager
     private val locationPermissionCode = 2
+    private var ad : InterstitialAd? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_local_info)
+
+        var adUnitId : String = // "ca-app-pub-3940256099942544/6300978111"
+            "ca-app-pub-3940256099942544/1033173712"
+        var adRequest : AdRequest = (AdRequest.Builder( )).build( )
+        var adLoad : AdLoad = AdLoad( )
+        InterstitialAd.load( this, adUnitId, adRequest, adLoad )
 
         clock = findViewById(R.id.clock)
         pred_rating = findViewById(R.id.rating)
@@ -105,10 +118,20 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
 
     private fun getLocation() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if ((ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+        if ((ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED)
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                locationPermissionCode
+            )
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
     }
     override fun onLocationChanged(location: Location) {
         var task: WebApiThread = WebApiThread(this, location.latitude, location.longitude)
@@ -123,6 +146,52 @@ class LocalInfoActivity : AppCompatActivity(), LocationListener {
             else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    inner class AdLoad : InterstitialAdLoadCallback( ) {
+        override fun onAdFailedToLoad(p0: LoadAdError) {
+            super.onAdFailedToLoad(p0)
+            Log.w( "MainActivity", "ad failed to load" )
+        }
+
+        override fun onAdLoaded(p0: InterstitialAd) {
+            super.onAdLoaded(p0)
+            Log.w( "MainActivity", "ad loaded" )
+            // show the ad
+            ad = p0
+            ad!!.show( this@LocalInfoActivity )
+
+            // handle user interaction with the ad
+            var manageAd : ManageAdShowing = ManageAdShowing()
+            ad!!.fullScreenContentCallback = manageAd
+        }
+    }
+    inner class ManageAdShowing : FullScreenContentCallback( ) {
+        override fun onAdDismissedFullScreenContent() {
+            super.onAdDismissedFullScreenContent()
+            Log.w( "MainActivity", "user closed the ad" )
+            // some code here to continue the app
+        }
+
+        override fun onAdClicked() {
+            super.onAdClicked()
+            Log.w( "MainActivity", "User clicked on the ad" )
+        }
+
+        override fun onAdImpression() {
+            super.onAdImpression()
+            Log.w( "MainActivity", "user has seen the ad" )
+        }
+
+        override fun onAdShowedFullScreenContent() {
+            super.onAdShowedFullScreenContent()
+            Log.w( "MainActivity", "ad has been shown" )
+        }
+
+        override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+            super.onAdFailedToShowFullScreenContent(p0)
+            Log.w( "MainActivity", "ad failed to show" )
         }
     }
 }
