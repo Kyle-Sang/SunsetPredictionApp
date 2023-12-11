@@ -31,6 +31,10 @@ class RatingActivity : AppCompatActivity() {
         finish()
     }
 
+    fun goBack(v : View) {
+        finish()
+    }
+
     companion object {
         var rating : Float = 0f
         var num_user_ratings = 0

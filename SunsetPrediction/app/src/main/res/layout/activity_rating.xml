@@ -11,11 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rate this sunset" />
+
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/prompt"/>
+        android:layout_below="@id/prompt"
+        android:theme="@style/RatingBar"/>
 
     <Button
         android:id="@+id/save"
@@ -31,5 +33,13 @@
         android:layout_height="wrap_content"
         android:text="Total ratings contributed: "
         android:layout_below="@id/save" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return"
+        android:onClick="goBack"
+        android:layout_below="@id/ratings_count"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

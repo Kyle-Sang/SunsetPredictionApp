@@ -17,7 +17,7 @@ class SunsetPredictor {
 
     fun getPredictedRating(data : WeatherData): Float {
         // ML model to be imported
-        return (0..5).random().toFloat()
+        return (1..5).random().toFloat()
     }
 
     fun initiatePreferences(context : Context, ratings_count : TextView) {

@@ -50,7 +50,9 @@
         android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/prediction" />
+        android:layout_below="@id/prediction"
+        android:isIndicator="true"
+        android:theme="@style/RatingBar"/>
 
     <Button
         android:id="@+id/rate_button"
