@@ -2,28 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:background="#FFF4D3">
+    android:layout_margin="15dp"
+    android:id="@+id/map">
+
+    <ImageView
+        android:id="@+id/sunset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sunset_logo"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="curr location"
-        android:textSize="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"/>
-
-
-    <RelativeLayout
-        android:id="@+id/infoPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/location"
-        android:layout_marginTop="10dp"
-        android:background="#FEE8BF"
-        >
+        android:layout_below="@id/sunset"
+        android:text="curr location" />
 
     <TextView
         android:id="@+id/temperature"
@@ -70,8 +64,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/prediction"
-        android:layout_centerHorizontal="true"
-        />
+        android:isIndicator="true"
+        android:theme="@style/RatingBar"/>
 
     <Button
         android:id="@+id/rate_button"
@@ -91,11 +85,11 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:id="@+id/clock"
-        android:layout_below="@id/infoPanel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="30dp"
-        />
+        android:dial="@drawable/dial"
+        android:hand_hour="@drawable/hour_hand"
+        android:hand_minute="@drawable/min_hand"
+        android:layout_below="@id/rate_button"
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:layout_width="wrap_content"
